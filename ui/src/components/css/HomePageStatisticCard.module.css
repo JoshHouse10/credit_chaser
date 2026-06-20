@@ -1,0 +1,44 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--mantine-spacing-lg);
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 var(--mantine-spacing-md);
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  max-width: 280px;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+
+  @mixin hover {
+    transform: translateY(-4px);
+    box-shadow: var(--mantine-shadow-md);
+  }
+}
+
+.accent {
+  height: 4px;
+  background-color: var(--mantine-color-orange-filled);
+}
+
+.title {
+text-align: center;
+}
+
+.value {
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-lg) 0;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
+}
