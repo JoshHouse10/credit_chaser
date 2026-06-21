@@ -28,34 +28,11 @@ export default function Header() {
             </ActionIcon>
           </Indicator>
 
-          <Menu trigger="hover" openDelay={100} closeDelay={150} position="bottom-end" width={220} withArrow>
-            <Menu.Target>
+
               <Avatar
-                style={{ cursor: 'pointer' }}
+
                 name={currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : ''}
               />
-            </Menu.Target>
-
-            <Menu.Dropdown>
-              {currentUser && (
-                <Menu.Label>
-                  <Text size="sm" fw={600} truncate>
-                    {`${currentUser.firstName} ${currentUser.lastName}`}
-                  </Text>
-                  <Text size="xs" c="dimmed" truncate>
-                    {currentUser.email}
-                  </Text>
-                </Menu.Label>
-              )}
-              <Menu.Item leftSection={<IconSettings size={16} stroke={1.5} />}>
-                Account settings
-              </Menu.Item>
-              <Menu.Divider />
-              <Menu.Item color="red" leftSection={<IconLogout size={16} stroke={1.5} />}>
-                Log out
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
         </Group>
 
         <Burger
