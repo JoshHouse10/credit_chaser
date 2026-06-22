@@ -2,16 +2,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--mantine-spacing-md);
-  max-width: 720px;
+  width: 100%;
   margin: 0 auto;
-  padding: 0 var(--mantine-spacing-xs);
 }
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--mantine-spacing-md);
-  justify-items: center;
 }
 
 @media (max-width: $mantine-breakpoint-sm) {
@@ -23,9 +21,7 @@
 .card {
   display: flex;
   flex-direction: column;
-  width: 220px;
-  min-width: 220px;
-  min-height: 120px;
+  min-height: 110px;
   transition: transform 150ms ease, box-shadow 150ms ease;
 
   @mixin hover {
@@ -34,20 +30,13 @@
   }
 }
 
-.accent {
-  height: 2px;
-  background-color: var(--mantine-color-orange-filled);
-}
-
 .title {
-  text-align: center;
+  font-weight: 500;
 }
 
 .value {
-  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md) 0;
-  text-align: center;
-  font-size: 0.9rem;
-  font-weight: 500;
-  line-height: 1;
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.1;
   color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
 }

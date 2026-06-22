@@ -1,6 +1,7 @@
 .header {
   height: 56px;
-  background-color: var(--mantine-color-body);
+  background-color: var(--mantine-color-indigo-7);
+  color: var(--mantine-color-white);
 }
 
 .inner {
@@ -8,4 +9,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.brand {
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  color: var(--mantine-color-white);
+}
+
+.org {
+  color: var(--mantine-color-indigo-1);
+  cursor: pointer;
 }

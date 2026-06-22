@@ -1,14 +1,13 @@
 import classes from './css/HomeDashboard.module.css';
 import HomePageStatisticCardContainer from './HomePageStatisticCardContainer.jsx';
-import Toggle from './Toggle.jsx';
+import TableContainer from './TableContainer.jsx';
 
 export default function HomeDashboard() {
 
   return (
-      <div>
-
+      <div className={classes.dashboard}>
           <HomePageStatisticCardContainer/>
-          </div>
-
-      )
+          <TableContainer title={'Due this week'}/>
+      </div>
+  )
 }

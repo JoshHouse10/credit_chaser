@@ -34,18 +34,18 @@
   font-weight: 500;
 
   @mixin hover {
-    background-color: light-dark(var(--mantine-color-orange-0), var(--mantine-color-dark-6));
-    color: light-dark(var(--mantine-color-orange-9), var(--mantine-color-white));
+    background-color: light-dark(var(--mantine-color-indigo-0), var(--mantine-color-dark-6));
+    color: light-dark(var(--mantine-color-indigo-9), var(--mantine-color-white));
 
     .linkIcon {
-      color: var(--mantine-color-orange-filled);
+      color: var(--mantine-color-indigo-filled);
     }
   }
 
   &[data-active] {
     &,
     &:hover {
-      background-color: var(--mantine-color-orange-filled);
+      background-color: var(--mantine-color-indigo-filled);
       color: var(--mantine-color-white);
 
       .linkIcon {

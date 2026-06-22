@@ -1,20 +1,21 @@
 import { useState } from 'react';
-import { Switch } from '@mantine/core';
+import { SegmentedControl } from '@mantine/core';
 
 export default function Toggle ({setRange}) {
-  const [checked, setChecked] = useState(false);
+  const [value, setValue] = useState('Yearly');
 
-  const handleChange = (event) => {
-      const isChecked = event.currentTarget.checked
-      setChecked(isChecked);
-      setRange(isChecked ? 'Monthly' : 'Yearly');
-      };
+  const handleChange = (val) => {
+    setValue(val);
+    setRange(val);
+  };
 
   return (
-    <Switch
-      checked={checked}
+    <SegmentedControl
+      value={value}
       onChange={handleChange}
-      label={checked ? 'This month' : 'This year'}
+      radius="xl"
+      color="indigo"
+      data={['Yearly', 'Monthly']}
     />
   );
 }

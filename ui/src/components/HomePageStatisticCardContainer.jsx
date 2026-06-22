@@ -1,3 +1,5 @@
+import { Group, Text } from '@mantine/core';
+import { IconCash, IconClock, IconAlertTriangle } from '@tabler/icons-react';
 import Toggle from './Toggle.jsx';
 import HomePageStatisticCard from './HomePageStatisticCard.jsx';
 import classes from './css/HomePageStatisticCard.module.css';
@@ -12,15 +14,26 @@ export default function HomePageStatisticCardContainer() {
     const totalOverdue = range === 'Yearly' ? 1000 : 0;
 
     const cards = [
-        {title: 'Total paid', value: totalPaid},
-        {title: 'Total outstanding', value: totalOutstanding},
-        {title: 'Total overdue', value: totalOverdue}
+        {title: 'Total paid', value: totalPaid, icon: IconCash, color: 'teal'},
+        {title: 'Total outstanding', value: totalOutstanding, icon: IconClock, color: 'indigo'},
+        {title: 'Total overdue', value: totalOverdue, icon: IconAlertTriangle, color: 'red'}
         ]
     return (
         <div className={classes.container}>
-            <Toggle setRange={setRange}/>
+            <Group justify="space-between" align="center">
+                <Text size="md" fw={500}>Overview</Text>
+                <Toggle setRange={setRange}/>
+            </Group>
             <div className={classes.cards}>
-                {cards.map(card => <HomePageStatisticCard key={card.title} title={card.title} value={card.value} />)}
+                {cards.map(card => (
+                    <HomePageStatisticCard
+                        key={card.title}
+                        title={card.title}
+                        value={card.value}
+                        icon={card.icon}
+                        color={card.color}
+                    />
+                ))}
             </div>
             </div>
         )

@@ -2,12 +2,11 @@ import { AppShell } from '@mantine/core';
 import Header from '../components/Header.jsx'
 import Navbar from '../components/Navbar.jsx';
 import HomeDashboard from '../components/HomeDashboard.jsx';
-import HomePageStatisticCardContainer from '../components/HomePageStatisticCardContainer.jsx';
 import { useDisclosure } from '@mantine/hooks';
 
 
 export default function HomePage() {
-  const [opened, { toggle }] = useDisclosure();
+  const [opened] = useDisclosure();
 
   return (
     <AppShell
@@ -24,7 +23,7 @@ export default function HomePage() {
       </AppShell.Header>
       <AppShell.Navbar><Navbar/></AppShell.Navbar>
 
-       <AppShell.Main><HomeDashboard/></AppShell.Main>
+       <AppShell.Main bg="var(--mantine-color-gray-0)"><HomeDashboard/></AppShell.Main>
     </AppShell>
   );
 }
