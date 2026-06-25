@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, Text, Group, Badge, NumberFormatter } from '@mantine/core';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry, themeQuartz } from 'ag-grid-community';
@@ -46,16 +46,27 @@ function ValueCell({ value }) {
 }
 
 export default function TableContainer({ title, query }) {
-  const [rowData] = useState([
+  const [rowData, setRowData] = useState([
   ]);
 
-  const [colDefs] = useState([
+  const [colDefs, setColDefs] = useState([
     { field: 'customer', headerName: 'Customer', flex: 1 },
     { field: 'value', headerName: 'Value', flex: 1, cellRenderer: ValueCell },
     { field: 'outstanding', headerName: 'Outstanding', flex: 1, cellRenderer: ValueCell },
     { field: 'dueDate', headerName: 'Due date', flex: 1 },
-    { field: 'status', headerName: 'Status', flex: 1, cellRenderer: StatusBadge },
   ]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await query();
+        if (data) setRowData(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, [query]);
 
   return (
     <Card shadow="sm" p="lg" radius="md" withBorder mt="md">
