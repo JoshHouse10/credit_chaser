@@ -1,24 +1,105 @@
 .header {
-  height: 56px;
-  background-color: var(--mantine-color-indigo-7);
-  color: var(--mantine-color-white);
+  height: 60px;
+  background: rgba(244, 246, 248, 0.82);
+  backdrop-filter: saturate(1.2) blur(8px);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
 }
 
-.inner {
-  height: 56px;
+.left {
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
-.brand {
+.eyebrow {
+  font-size: 10px;
   font-weight: 600;
-  font-size: 1rem;
-  letter-spacing: 1px;
-  color: var(--mantine-color-white);
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin: 0 0 1px;
 }
 
-.org {
-  color: var(--mantine-color-indigo-1);
+.pageTitle {
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--text-h);
+  letter-spacing: -0.01em;
+}
+
+/* Org switcher */
+.orgSwitch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 7px;
   cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.orgSwitch:hover {
+  border-color: var(--line-strong);
+}
+
+.orgDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--paid);
+}
+
+.orgName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.orgChev {
+  color: var(--text-dim);
+}
+
+/* User chip */
+.userChip {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding-left: 6px;
+  margin-left: 2px;
+  border-left: 1px solid var(--line);
+}
+
+.userMeta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.userName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.userRole {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+@media (max-width: 700px) {
+  .header {
+    padding: 0 16px;
+  }
+  .orgSwitch,
+  .userMeta {
+    display: none;
+  }
 }

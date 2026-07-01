@@ -1,43 +1,75 @@
 import { useState } from 'react';
-import { Container, Group, Avatar, ActionIcon, Indicator, Text } from '@mantine/core';
-import { IconBell, IconChevronDown } from '@tabler/icons-react';
+import { Group, Avatar, ActionIcon, Indicator, Text, Menu } from '@mantine/core';
+import { IconBell, IconChevronDown, IconSearch } from '@tabler/icons-react';
 import classes from './css/Header.module.css';
 
 const josh = {
-        firstName:'Joshua',
-        lastName: 'House',
-        email: 'jhousepersonal@gmail.com',
-        company: 'Josh Industrial'
-        }
+  firstName: 'Joshua',
+  lastName: 'House',
+  email: 'jhousepersonal@gmail.com',
+  company: 'Josh Industrial',
+};
 
 export default function Header() {
-
-  const [currentUser, setCurrentUser] = useState(josh);
+  const [currentUser] = useState(josh);
 
   return (
     <header className={classes.header}>
-      <Container fluid className={classes.inner}>
-        <Group gap="xl">
-          <Text className={classes.brand}>CREDIT CONTROL</Text>
-          <Group gap={6} className={classes.org}>
-            <Text size="sm">{currentUser?.company}</Text>
-            <IconChevronDown size={14} stroke={1.5} />
-          </Group>
-        </Group>
+      <div className={classes.left}>
+        <div>
+          <p className={classes.eyebrow}>Credit Control</p>
+          <h1 className={classes.pageTitle}>Dashboard</h1>
+        </div>
+      </div>
 
-        <Group gap="md">
-          <Indicator color="red" size={8} offset={4}>
-            <ActionIcon variant="subtle" color="white" size="lg" aria-label="Notifications">
-              <IconBell size={20} stroke={1.5} />
-            </ActionIcon>
-          </Indicator>
+      <Group gap="sm" wrap="nowrap">
+        <button className={classes.orgSwitch} type="button">
+          <span className={classes.orgDot} />
+          <span className={classes.orgName}>{currentUser?.company}</span>
+          <IconChevronDown size={14} stroke={2} className={classes.orgChev} />
+        </button>
 
+        <ActionIcon
+          variant="subtle"
+          color="gray"
+          size="lg"
+          radius="md"
+          aria-label="Search"
+        >
+          <IconSearch size={18} stroke={1.8} />
+        </ActionIcon>
+
+        <Indicator color="var(--overdue)" size={7} offset={5} withBorder>
+          <ActionIcon
+            variant="subtle"
+            color="gray"
+            size="lg"
+            radius="md"
+            aria-label="Notifications"
+          >
+            <IconBell size={18} stroke={1.8} />
+          </ActionIcon>
+        </Indicator>
+
+        <div className={classes.userChip}>
           <Avatar
-            color="indigo"
-            name={currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : ''}
+            radius="md"
+            size={32}
+            color="jade"
+            name={
+              currentUser
+                ? `${currentUser.firstName} ${currentUser.lastName}`
+                : ''
+            }
           />
-        </Group>
-      </Container>
+          <div className={classes.userMeta}>
+            <Text className={classes.userName}>
+              {currentUser.firstName} {currentUser.lastName}
+            </Text>
+            <Text className={classes.userRole}>Credit Controller</Text>
+          </div>
+        </div>
+      </Group>
     </header>
   );
 }

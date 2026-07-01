@@ -1,22 +1,20 @@
 import { useState } from 'react';
 import {
-  IconDashboard,
+  IconLayoutDashboard,
   IconLogout,
-  IconInvoice,
-  IconUserCircle,
-  IconBuildingBank,
-  IconHistory
+  IconFileInvoice,
+  IconUsers,
+  IconRobot,
+  IconHistory,
 } from '@tabler/icons-react';
-import { Code, Group } from '@mantine/core';
 import classes from './css/Navbar.module.css';
 
 const data = [
-  { link: '', label: 'Dashboard', icon: IconDashboard },
-  { link: '', label: 'Invoices', icon: IconInvoice },
-  { link: '', label: 'Customers', icon: IconUserCircle },
-  { link: '', label: 'Automated Credit Control', icon: IconBuildingBank },
+  { link: '', label: 'Dashboard', icon: IconLayoutDashboard },
+  { link: '', label: 'Invoices', icon: IconFileInvoice },
+  { link: '', label: 'Customers', icon: IconUsers },
+  { link: '', label: 'Automated Control', icon: IconRobot },
   { link: '', label: 'Event Log', icon: IconHistory },
-
 ];
 
 export default function Navbar() {
@@ -33,26 +31,33 @@ export default function Navbar() {
         setActive(item.label);
       }}
     >
-      <item.icon className={classes.linkIcon} stroke={1.5} />
+      <item.icon className={classes.linkIcon} stroke={1.6} />
       <span>{item.label}</span>
     </a>
   ));
 
   return (
     <nav className={classes.navbar}>
-      <div className={classes.navbarMain}>
-        <Group className={classes.header} justify="space-between">
+      <div className={classes.brand}>
+        <span className={classes.brandMark}>£</span>
+        <span className={classes.brandText}>
+          Credit<span className={classes.brandAccent}>Chaser</span>
+        </span>
+      </div>
 
-        </Group>
+      <div className={classes.navbarMain}>
+        <p className={classes.groupLabel}>Workspace</p>
         {links}
       </div>
 
       <div className={classes.footer}>
-
-
-        <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-          <IconLogout className={classes.linkIcon} stroke={1.5} />
-          <span>Logout</span>
+        <a
+          href="#"
+          className={classes.link}
+          onClick={(event) => event.preventDefault()}
+        >
+          <IconLogout className={classes.linkIcon} stroke={1.6} />
+          <span>Log out</span>
         </a>
       </div>
     </nav>

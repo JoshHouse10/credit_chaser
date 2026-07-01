@@ -1,16 +1,18 @@
 package com.creditchaser.functions;
 
 import com.creditchaser.dto.InvoiceDto;
+import com.creditchaser.dto.StatisticCardResponseDto;
 import com.creditchaser.entities.Invoice;
 import com.creditchaser.repository.InvoiceRepository;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.Double;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +24,17 @@ public class InvoiceFunction {
     InvoiceFunction(InvoiceRepository invoiceRepository) {
         this.invoiceRepository = invoiceRepository;
     }
+    private boolean isOverdue(LocalDate paymentDate) {
+        return !LocalDate.now().isAfter(paymentDate);
+    }
+    private boolean isInCurrentMonth(LocalDate documentDate) {
+        final LocalDate monthStart = LocalDate.now().withDayOfMonth(1);
+        final LocalDate monthEnd = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
+        return !documentDate.isAfter(monthEnd) && !documentDate.isBefore(monthStart);
+
+    }
+
+
     @Transactional(readOnly = true)
     public List<InvoiceDto> findAllDueNext7Days() {
 
@@ -44,4 +57,45 @@ public class InvoiceFunction {
         });
         return dtoList;
     }
+
+    public StatisticCardResponseDto statisticCardQuery() {
+
+        final List<Invoice> invoices = invoiceRepository.findAll()
+                .stream()
+                .filter(invoice -> !invoice.getDocumentDate().isAfter(LocalDate.now().plusYears(1)))
+                .collect(Collectors.toList());
+
+        BigDecimal yearlyTotalPaid = sumBy(invoices, Invoice::getPaidTotal);
+        BigDecimal yearlyTotalOutstanding = sumBy(invoices, Invoice::getOutstandingTotal);
+        BigDecimal yearlyTotalOverdue = sumBy(
+                invoices.stream().filter(i -> isOverdue(i.getDueDate())).collect(Collectors.toList()),
+                Invoice::getOutstandingTotal
+        );
+
+        List<Invoice> monthlyInvoices = invoices.stream()
+                .filter(invoice -> isInCurrentMonth(invoice.getDocumentDate()))
+                .collect(Collectors.toList());
+
+        BigDecimal monthlyTotalPaid = sumBy(monthlyInvoices, Invoice::getPaidTotal);
+        BigDecimal monthlyTotalOutstanding = sumBy(monthlyInvoices, Invoice::getOutstandingTotal);
+        BigDecimal monthlyTotalOverdue = sumBy(
+                monthlyInvoices.stream().filter(i -> isOverdue(i.getDueDate())).collect(Collectors.toList()),
+                Invoice::getOutstandingTotal
+        );
+
+        return new StatisticCardResponseDto(
+                yearlyTotalPaid, yearlyTotalOutstanding, yearlyTotalOverdue,
+                monthlyTotalPaid, monthlyTotalOutstanding, monthlyTotalOverdue
+        );
+    }
+
+    private BigDecimal sumBy(List<Invoice> invoices, Function<Invoice, BigDecimal> extractor) {
+        return invoices.stream()
+                .map(extractor)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+
+
 }

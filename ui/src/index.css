@@ -1,41 +1,49 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
+  /* Ledger palette — receivable health encoded in colour */
+  --ink: #10151c; /* dark rail */
+  --ink-soft: #1a212b; /* rail hover / raised */
+  --canvas: #f4f6f8; /* app field */
+  --card: #ffffff; /* surfaces */
+  --line: #e6e9ee; /* hairlines */
+  --line-strong: #d5dae1;
+
+  --text-h: #0e141b; /* headings / primary */
+  --text: #5b6672; /* body */
+  --text-dim: #8a94a6; /* captions / labels */
+
+  --rail-text: #8b96a8;
+  --rail-text-h: #ffffff;
+
+  /* Semantic trio — the domain */
+  --paid: #0fa968;
+  --paid-soft: #e7f8f1;
+  --outstanding: #f5a524;
+  --outstanding-soft: #fdf3e2;
+  --overdue: #f04463;
+  --overdue-soft: #fdeaee;
 
   --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --heading: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
+  --radius: 6px;
+  --shadow-sm: 0 1px 2px rgba(16, 21, 28, 0.04),
+    0 1px 3px rgba(16, 21, 28, 0.06);
+  --shadow-md: 0 4px 16px rgba(16, 21, 28, 0.08);
+
+  font: 15px/1.5 var(--sans);
   color: var(--text);
-  background: var(--bg);
+  background: var(--canvas);
+  color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-  }
 }
 
 body {
   margin: 0;
+  background: var(--canvas);
 }
 
 #root {
@@ -43,45 +51,46 @@ body {
 }
 
 h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 600;
+h2,
+h3 {
+  font-family: var(--display);
   color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
+  margin: 0;
+  letter-spacing: -0.01em;
 }
 
 p {
   margin: 0;
 }
 
+/* Money and any figure gets aligned tabular numerals */
+.mono,
+.figure {
+  font-family: var(--mono);
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+  letter-spacing: -0.02em;
+}
+
+/* Uppercase section / field labels — structural, not decorative */
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
 code {
   font-family: var(--mono);
-  display: inline-flex;
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
+  font-size: 0.85em;
+  padding: 2px 6px;
   border-radius: 4px;
   color: var(--text-h);
-  background: var(--code-bg);
+  background: #eef0f3;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--paid);
+  outline-offset: 2px;
 }

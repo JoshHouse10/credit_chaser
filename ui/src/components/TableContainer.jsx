@@ -1,24 +1,36 @@
 import { useState, useEffect } from 'react';
-import { Card, Text, Group, Badge, NumberFormatter } from '@mantine/core';
+import { Badge } from '@mantine/core';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry, themeQuartz } from 'ag-grid-community';
-
+import classes from './css/TableContainer.module.css';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const gridTheme = themeQuartz.withParams({
-  accentColor: '#4c43c4',
-  headerBackgroundColor: '#f3f2fb',
-  headerTextColor: '#3c3489',
+  accentColor: '#0fa968',
+  backgroundColor: '#ffffff',
+  headerBackgroundColor: '#fbfcfd',
+  headerTextColor: '#8a94a6',
+  headerFontWeight: 600,
+  headerFontSize: 11,
+  foregroundColor: '#0e141b',
   fontFamily: 'Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
-  borderColor: '#e9e8f2',
-  rowHoverColor: '#f3f2fb',
+  cellFontFamily: 'Inter, system-ui, sans-serif',
+  borderColor: '#e6e9ee',
+  rowBorder: { style: 'solid', width: 1, color: '#f0f2f5' },
+  headerRowBorder: { style: 'solid', width: 1, color: '#e6e9ee' },
+  wrapperBorder: false,
+  rowHoverColor: '#f6f8f9',
+  oddRowBackgroundColor: '#ffffff',
+  headerHeight: 40,
+  rowHeight: 46,
+  fontSize: 13.5,
+  cellHorizontalPadding: 16,
 });
 
 const calculateStatus = (outstanding, dueDate) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-
   const due = new Date(dueDate);
   due.setHours(0, 0, 0, 0);
 
@@ -28,35 +40,36 @@ const calculateStatus = (outstanding, dueDate) => {
 };
 
 const statusColors = {
-  Overdue: 'red',
-  Outstanding: 'yellow',
-  Paid: 'teal',
+  Overdue: 'var(--overdue)',
+  Outstanding: 'var(--outstanding)',
+  Paid: 'var(--paid)',
 };
 
-function StatusBadge({ value }) {
+export function StatusBadge({ value }) {
   return (
-    <Badge color={statusColors[value] ?? 'gray'} variant="light" radius="sm">
+    <Badge
+      variant="light"
+      radius="sm"
+      styles={{
+        root: {
+          color: statusColors[value] ?? 'var(--text-dim)',
+          background: `color-mix(in srgb, ${statusColors[value] ?? '#8a94a6'} 12%, transparent)`,
+          fontWeight: 600,
+          textTransform: 'none',
+          letterSpacing: 0,
+        },
+      }}
+    >
       {value}
     </Badge>
   );
 }
 
-function ValueCell({ value }) {
-  return <NumberFormatter prefix="£" value={value} thousandSeparator />;
-}
-
-export default function TableContainer({ title, query }) {
-  const [rowData, setRowData] = useState([
-  ]);
-
-  const [colDefs, setColDefs] = useState([
-    { field: 'customer', headerName: 'Customer', flex: 1 },
-    { field: 'value', headerName: 'Value', flex: 1, cellRenderer: ValueCell },
-    { field: 'outstanding', headerName: 'Outstanding', flex: 1, cellRenderer: ValueCell },
-    { field: 'dueDate', headerName: 'Due date', flex: 1 },
-  ]);
+export default function TableContainer({ title, subtitle, query, colDefs }) {
+  const [rowData, setRowData] = useState([]);
 
   useEffect(() => {
+    if (!query) return;
     const fetchData = async () => {
       try {
         const data = await query();
@@ -69,17 +82,28 @@ export default function TableContainer({ title, query }) {
   }, [query]);
 
   return (
-    <Card shadow="sm" p="lg" radius="md" withBorder mt="md">
-      <Group justify="space-between" mb="md">
-        <Text size="md" fw={500}>{title}</Text>
-      </Group>
-      <div style={{ height: 280 }}>
+    <div className={classes.card}>
+      <div className={classes.head}>
+        <div>
+          <p className={classes.eyebrow}>Receivables</p>
+          <h2 className={classes.title}>{title}</h2>
+        </div>
+        <span className={classes.count}>
+          {rowData.length} {rowData.length === 1 ? 'record' : 'records'}
+        </span>
+      </div>
+      <div className={classes.grid}>
         <AgGridReact
           theme={gridTheme}
           rowData={rowData}
           columnDefs={colDefs}
+          defaultColDef={{ minWidth: 70, resizable: false }}
+          suppressHorizontalScroll
+          domLayout="autoHeight"
         />
       </div>
-    </Card>
+    </div>
   );
 }
+
+export { calculateStatus };

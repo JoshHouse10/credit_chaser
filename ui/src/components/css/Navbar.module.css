@@ -1,63 +1,115 @@
 .navbar {
   height: 100%;
   width: 100%;
-  padding: var(--mantine-spacing-md);
+  padding: 16px 14px;
   display: flex;
   flex-direction: column;
-  background-color: var(--mantine-color-body);
+  background: var(--ink);
+}
+
+/* Wordmark */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px 20px;
+}
+
+.brandMark {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: var(--paid);
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.brandText {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+.brandAccent {
+  color: var(--paid);
 }
 
 .navbarMain {
   flex: 1;
 }
 
-.header {
-  padding-bottom: var(--mantine-spacing-md);
-  margin-bottom: calc(var(--mantine-spacing-md) * 1.5);
-  border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+.groupLabel {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: #56617a;
+  padding: 4px 12px;
+  margin: 8px 0 6px;
 }
 
 .footer {
-  padding-top: var(--mantine-spacing-md);
-  margin-top: var(--mantine-spacing-md);
-  border-top: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  padding-top: 10px;
 }
 
 .link {
   display: flex;
   align-items: center;
+  gap: 11px;
   text-decoration: none;
-  font-size: var(--mantine-font-size-sm);
-  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
-  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
-  border-radius: var(--mantine-radius-sm);
+  font-size: 14px;
   font-weight: 500;
+  color: var(--rail-text);
+  padding: 9px 12px;
+  border-radius: 7px;
+  margin-bottom: 2px;
+  position: relative;
+  transition: background 120ms ease, color 120ms ease;
 
   @mixin hover {
-    background-color: light-dark(var(--mantine-color-indigo-0), var(--mantine-color-dark-6));
-    color: light-dark(var(--mantine-color-indigo-9), var(--mantine-color-white));
+    background: var(--ink-soft);
+    color: var(--rail-text-h);
 
     .linkIcon {
-      color: var(--mantine-color-indigo-filled);
+      color: var(--rail-text-h);
     }
   }
 
   &[data-active] {
     &,
     &:hover {
-      background-color: var(--mantine-color-indigo-filled);
-      color: var(--mantine-color-white);
+      background: rgba(15, 169, 104, 0.14);
+      color: #fff;
 
       .linkIcon {
-        color: var(--mantine-color-white);
+        color: var(--paid);
       }
     }
+  }
+
+  &[data-active]::before {
+    content: '';
+    position: absolute;
+    left: -14px;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--paid);
   }
 }
 
 .linkIcon {
-  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-2));
-  margin-right: var(--mantine-spacing-sm);
-  width: 25px;
-  height: 25px;
+  color: #6b7690;
+  width: 20px;
+  height: 20px;
+  transition: color 120ms ease;
 }

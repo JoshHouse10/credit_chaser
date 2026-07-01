@@ -1,21 +1,17 @@
-import { Card, Text, Group, ThemeIcon, NumberFormatter } from '@mantine/core';
+import { NumberFormatter } from '@mantine/core';
 import classes from './css/HomePageStatisticCard.module.css';
 
-export default function HomePageStatisticCard({ title, value, icon: Icon, color }) {
+export default function HomePageStatisticCard({ title, value, tone, percent }) {
   return (
-    <Card className={classes.card} shadow="sm" p="lg" radius="md" withBorder>
-      <Group gap="sm" mb="sm">
-        <ThemeIcon color={color} variant="light" size={38} radius="md">
-          {Icon && <Icon size={20} stroke={1.5} />}
-        </ThemeIcon>
-        <Text className={classes.title} size="sm" c="dimmed">
-          {title}
-        </Text>
-      </Group>
-
-      <div className={classes.value}>
+    <div className={classes.card} data-tone={tone}>
+      <div className={classes.cardHead}>
+        <span className={classes.dot} />
+        <span className={classes.cardTitle}>{title}</span>
+        <span className={classes.cardPct}>{Math.round(percent)}%</span>
+      </div>
+      <div className={`${classes.value} figure`}>
         <NumberFormatter prefix="£" value={value} thousandSeparator />
       </div>
-    </Card>
+    </div>
   );
 }
