@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   IconLayoutDashboard,
   IconLogout,
@@ -8,17 +8,25 @@ import {
   IconHistory,
 } from '@tabler/icons-react';
 import classes from './css/Navbar.module.css';
+import {useNavigate} from "react-router";
 
 const data = [
-  { link: '', label: 'Dashboard', icon: IconLayoutDashboard },
-  { link: '', label: 'Invoices', icon: IconFileInvoice },
-  { link: '', label: 'Customers', icon: IconUsers },
-  { link: '', label: 'Automated Control', icon: IconRobot },
-  { link: '', label: 'Event Log', icon: IconHistory },
+  { link: '/', label: 'Dashboard', icon: IconLayoutDashboard },
+  { link: '/invoices', label: 'Invoices', icon: IconFileInvoice },
+  { link: '/customers', label: 'Customers', icon: IconUsers },
+  { link: '/automated-control', label: 'Automated Control', icon: IconRobot },
+  { link: '/event-log', label: 'Event Log', icon: IconHistory },
 ];
 
 export default function Navbar() {
   const [active, setActive] = useState('Dashboard');
+  const navigate = useNavigate();
+
+
+  const handleNavigation = (link) => {
+
+      navigate(link)
+      }
 
   const links = data.map((item) => (
     <a
@@ -28,7 +36,8 @@ export default function Navbar() {
       key={item.label}
       onClick={(event) => {
         event.preventDefault();
-        setActive(item.label);
+        setActive(label => item.label);
+        navigate(item.link);
       }}
     >
       <item.icon className={classes.linkIcon} stroke={1.6} />

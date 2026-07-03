@@ -1,7 +1,8 @@
 import '@mantine/core/styles.css';
-import HomePage from './pages/HomePage.jsx';
 import { AllCommunityModule } from 'ag-grid-community';
 import { AgGridProvider } from 'ag-grid-react';
+import {BrowserRouter, Routes, Route} from "react-router";
+import Shell from './components/Shell.jsx';
 
 
 
@@ -52,10 +53,14 @@ const modules = [AllCommunityModule];
 
 export default function App() {
   return (
+
     <MantineProvider theme={theme}>
         <AgGridProvider modules={modules}>
-      <HomePage />
-      </AgGridProvider>
+            <BrowserRouter>
+                <Shell/>
+            </BrowserRouter>
+            </AgGridProvider>
     </MantineProvider>
+
   );
 }

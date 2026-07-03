@@ -4,7 +4,10 @@ import com.creditchaser.dto.InvoiceDto;
 import com.creditchaser.dto.StatisticCardResponseDto;
 import com.creditchaser.entities.Invoice;
 import com.creditchaser.repository.InvoiceRepository;
-import org.springframework.cglib.core.Local;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +37,13 @@ public class InvoiceFunction {
 
     }
 
+    @Transactional(readOnly = true)
+    public Page<InvoiceDto> findAllByDocumentDate(int page, int limit) {
+
+        Pageable pageable = PageRequest.of(page, limit, Sort.by("documentDate").descending());
+        return invoiceRepository.findAll(pageable).map(InvoiceDto::new);
+    }
+
 
     @Transactional(readOnly = true)
     public List<InvoiceDto> findAllDueNext7Days() {
@@ -56,6 +66,14 @@ public class InvoiceFunction {
             dtoList.add(new InvoiceDto(invoice));
         });
         return dtoList;
+    }
+
+    @Transactional(readOnly = true)
+    public List<InvoiceDto> findLargestValueInvoices() {
+        return invoiceRepository.findLargestValueInvoices()
+                .stream()
+                .map(InvoiceDto::new)
+                .collect(Collectors.toList());
     }
 
     public StatisticCardResponseDto statisticCardQuery() {
@@ -95,6 +113,8 @@ public class InvoiceFunction {
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
+
 
 
 

@@ -10,7 +10,7 @@ const josh = {
   company: 'Josh Industrial',
 };
 
-export default function Header() {
+export default function Header({pageTitle}) {
   const [currentUser] = useState(josh);
 
   return (
@@ -18,7 +18,7 @@ export default function Header() {
       <div className={classes.left}>
         <div>
           <p className={classes.eyebrow}>Credit Control</p>
-          <h1 className={classes.pageTitle}>Dashboard</h1>
+          <h1 className={classes.pageTitle}>{pageTitle}</h1>
         </div>
       </div>
 

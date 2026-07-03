@@ -25,4 +25,14 @@ public class DashboardController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(String.format("Something went wrong! \n %s", e.getMessage()));
         }
     }
-}
+    @GetMapping("largest_value")
+    private ResponseEntity<Object> largestValueQuery() {
+        try {
+            return ResponseEntity.ok().body(invoiceFunction.findLargestValueInvoices());
+        }
+        catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(String.format("Something went wrong \n %s", e.getMessage()));
+        }
+        }
+    }
+

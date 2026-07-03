@@ -1,8 +1,8 @@
 import classes from './css/HomeDashboard.module.css';
 import { NumberFormatter } from '@mantine/core';
 import HomePageStatisticCardContainer from './HomePageStatisticCardContainer.jsx';
-import TableContainer, { StatusBadge, calculateStatus } from './TableContainer.jsx';
-import { fetchDueInvoicesNext7Days } from '../api/queries.js';
+import DashboardTableContainer, { StatusBadge, calculateStatus } from './DashboardTableContainer.jsx';
+import { fetchDueInvoicesNext7Days, fetchTopRankedReceivables } from '../api/queries.js';
 
 function MoneyCell({ value }) {
   return (
@@ -40,13 +40,14 @@ export default function HomeDashboard() {
   return (
     <div className={classes.dashboard}>
       <HomePageStatisticCardContainer />
-      <TableContainer
+      <DashboardTableContainer
         title="Due this week"
         query={fetchDueInvoicesNext7Days}
         colDefs={dueThisWeekColDefs}
       />
-      <TableContainer
-        title="Top ranked receivables"
+      <DashboardTableContainer
+        title="Largest Value"
+        query={fetchTopRankedReceivables}
         colDefs={topRankedReceivablesColDefs}
       />
     </div>

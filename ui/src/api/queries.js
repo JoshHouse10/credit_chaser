@@ -24,9 +24,9 @@ export const fetchHomePageStatistics = async () => {
     }
 }
 
-export const topRankedReceivables = async () => {
+export const fetchTopRankedReceivables = async () => {
     try {
-    const response = await client.get("/dashboard/top_receivables");
+    const response = await client.get("/dashboard/largest_value");
     if(response.data) return response.data;
     else return [];
     }
@@ -34,4 +34,19 @@ export const topRankedReceivables = async () => {
     console.error(error);
     throw error;
     }
-}
+    }
+
+export const fetchInvoices = async (page, limit) => {
+    try {
+        const response = await client.get("/invoices",{
+            params : {
+                page,
+                limit
+                }
+            })
+            return response.data;
+        }
+        catch(error) {
+        console.error(error)
+        }
+    }
