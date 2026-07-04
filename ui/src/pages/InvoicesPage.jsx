@@ -1,18 +1,20 @@
-import { AppShell } from '@mantine/core';
+import { AppShell, Button } from '@mantine/core';
+import { IconPlus } from '@tabler/icons-react';
 import Header from '../components/Header.jsx'
 import Navbar from '../components/Navbar.jsx';
 import InteractiveTable from '../components/InteractiveTable.jsx';
 import { useDisclosure } from '@mantine/hooks';
 import classes from './css/InvoicesPage.module.css'
-import { fetchInvoices } from '../api/queries.js';
+import { fetchInvoices, searchInvoicesQuery } from '../api/queries.js';
 import { StatusBadge, calculateStatus } from '../components/DashboardTableContainer.jsx';
 import { NumberFormatter } from '@mantine/core';
 
 const topRankedReceivablesColDefs = [
   { field: 'customer.firstName', headerName: 'Customer', flex: 1.4 },
+  {field: 'documentDate', headerName: 'Document Date', flex:1, cellRenderer: DateCell},
   { field: 'invoiceTotal', headerName: 'Total', flex: 1, cellRenderer: MoneyCell, type: 'rightAligned' },
   { field: 'outstandingTotal', headerName: 'Outstanding', flex: 1, cellRenderer: MoneyCell, type: 'rightAligned' },
-  { field: 'dueDate', headerName: 'Due date', flex: 1, cellRenderer: DateCell },
+  { field: 'dueDate', headerName: 'Due Date', flex: 1, cellRenderer: DateCell },
   { headerName: 'Status', flex: 1, minWidth: 120, cellRenderer: StatusCell },
 ];
 
@@ -36,12 +38,18 @@ export default function InvoicesPage() {
   const [opened] = useDisclosure();
 
   return (
-      <div className={classes.invoicesPageContainer}>
-
-    <div className={classes.createInvoiceContainer}>
-        <button>Create Invoice</button>
-        </div>
-        <InteractiveTable query={fetchInvoices} colDefs={topRankedReceivablesColDefs}/>
-        </div>
+    <div className={classes.invoicesPageContainer}>
+      <div className={classes.createInvoiceContainer}>
+        <Button color="jade" leftSection={<IconPlus size={16} stroke={2} />}>
+          Create invoice
+        </Button>
+      </div>
+      <InteractiveTable
+        title="All invoices"
+        query={fetchInvoices}
+        searchQuery={searchInvoicesQuery}
+        colDefs={topRankedReceivablesColDefs}
+      />
+    </div>
   );
 }

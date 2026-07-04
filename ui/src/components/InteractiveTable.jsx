@@ -2,6 +2,8 @@ import { AllCommunityModule, ModuleRegistry, themeQuartz } from 'ag-grid-communi
 import classes from './css/DashboardTableContainer.module.css';
 import {useState, useEffect} from 'react';
 import { AgGridReact } from 'ag-grid-react';
+import { TextInput, ActionIcon } from '@mantine/core';
+import { IconSearch, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -29,61 +31,70 @@ const gridTheme = themeQuartz.withParams({
 
 
 
-export default function InteractiveTable({ title, subtitle, query, colDefs }) {
-  const [rowData, setRowData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
+export default function InteractiveTable({ title, subtitle, query, searchQuery, colDefs }) {
 
+    const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [totalRecords, setTotalRecords] = useState(0);
+    const [rowData, setRowData] = useState([]);
+    const [filteredData, setFilteredData] = useState();
 
-  const walkPath = (obj, path) => {
-    let current = obj;
-    for (const key of path.split('.')) {
-      if (current == null) return undefined;
-      current = current[key];
-    }
-    return current;
-  };
-
-  const handleSearch = (e, searchableFields) => {
-    const text = e.target.value.trim().toLowerCase();
-
-    if (!text) {
-      setFilteredData(undefined);
-      return;
-    }
-
-    const matches = rowData.filter((row) =>
-      searchableFields.some((field) => {
-        const value = walkPath(row, field);
-        return value != null && String(value).toLowerCase().includes(text);
-      })
-    );
-
-    setFilteredData(matches);
-  };
-
-  useEffect(() => {
-    if (!query) return;
     const fetchData = async () => {
-      try {
-        const data = await query(0,5);
+            try {
+              const data = await query(page,10);
 
-        if (data.content) setRowData(data.content);
-      } catch (error) {
-      }
-    };
+              if (data.content) {
+                  setRowData(data.content);
+                  setTotalPages(data.totalPages);
+                  setTotalRecords(data.totalElements)
+                  }
+            } catch (error) {
+            }
+          };
+
+      const fetchSearchQuery = async (text) => {
+
+          if(text === null || text === undefined || text === "") {setFilteredData(undefined); return;}
+          try {
+              const data = await searchQuery(0, text);
+              if(data) return data.content;
+              }
+          catch(error) {
+              console.error(error);
+              throw error;
+              }
+
+          }
+
+      const handleSearchChange = (e) => {
+          const text = e.target.value;
+          fetchSearchQuery(text);
+          }
+
+    useEffect(() => {
+    if (!query) return;
     fetchData();
-  }, [query]);
+  }, [query, page]);
 
   return (
     <div className={classes.card}>
       <div className={classes.head}>
         <div>
-          <input type="text" placeholder="search" onChange={(e) => handleSearch(e, ["customer.firstName"])}/>
+          <p className={classes.eyebrow}>Receivables</p>
           <h2 className={classes.title}>{title}</h2>
         </div>
-        <span className={classes.count}>
-          {rowData.length} {rowData.length === 1 ? 'record' : 'records'}
-        </span>
+        <div className={classes.headActions}>
+          <TextInput
+            className={classes.search}
+            placeholder="Search invoices…"
+            radius="sm"
+            leftSection={<IconSearch size={15} stroke={1.8} />}
+            onChange={handleSearchChange}
+          />
+          <span className={classes.count}>
+            {totalRecords} {totalRecords === 1 ? 'record' : 'records'}
+          </span>
+        </div>
       </div>
       <div className={classes.grid}>
         <AgGridReact
@@ -94,6 +105,31 @@ export default function InteractiveTable({ title, subtitle, query, colDefs }) {
           suppressHorizontalScroll
           domLayout="autoHeight"
         />
+      </div>
+      <div className={classes.footer}>
+        <span className={classes.pageLabel}>page {page + 1} of {totalPages}</span>
+        <div className={classes.pageControls}>
+          <ActionIcon
+            variant="subtle"
+            color="gray"
+            radius="md"
+            aria-label="Previous page"
+            disabled={page === 0}
+            onClick={() => setPage(page - 1)}
+          >
+            <IconChevronLeft size={16} stroke={1.8} />
+          </ActionIcon>
+          <ActionIcon
+            variant="subtle"
+            color="gray"
+            radius="md"
+            aria-label="Next page"
+            disabled={page + 1 >= totalPages}
+            onClick={() => setPage(page + 1)}
+          >
+            <IconChevronRight size={16} stroke={1.8} />
+          </ActionIcon>
+        </div>
       </div>
     </div>
   );
