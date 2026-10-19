@@ -31,7 +31,6 @@ public class Customer extends BaseEntity {
 
     /** Build a Customer entity from its DTO (e.g. an incoming request from the front end). */
     public Customer(CustomerDto dto) {
-        setId(dto.getId());
         this.firstName = dto.getFirstName();
         this.lastName = dto.getLastName();
         this.email = dto.getEmail();

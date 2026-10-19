@@ -1,5 +1,6 @@
 package com.creditchaser.functions;
 
+import com.creditchaser.dto.CustomerDto;
 import com.creditchaser.entities.Customer;
 import com.creditchaser.entities.Invoice;
 import com.creditchaser.repository.CustomerRepository;
@@ -37,5 +38,8 @@ public class CustomerFunction {
         );
         if (!customers.isEmpty()) customerRepository.saveAll(customers);
 
+    }
+    public List<CustomerDto> getCustomers() {
+        return customerRepository.findAll().stream().map(cus -> new CustomerDto(cus)).toList();
     }
 }

@@ -3,6 +3,7 @@ import classes from './css/DashboardTableContainer.module.css';
 import {useState, useEffect} from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { TextInput, ActionIcon } from '@mantine/core';
+import {useDebounce300ms} from '../hooks/DebounceHooks.jsx';
 import { IconSearch, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 
 
@@ -37,7 +38,9 @@ export default function InteractiveTable({ title, subtitle, query, searchQuery, 
     const [totalPages, setTotalPages] = useState(0);
     const [totalRecords, setTotalRecords] = useState(0);
     const [rowData, setRowData] = useState([]);
-    const [filteredData, setFilteredData] = useState();
+    const [searchText, setSearchText] = useState('');
+
+    const debouncedText = useDebounce300ms(searchText);
 
     const fetchData = async () => {
             try {
@@ -52,12 +55,16 @@ export default function InteractiveTable({ title, subtitle, query, searchQuery, 
             }
           };
 
-      const fetchSearchQuery = async (text) => {
-
-          if(text === null || text === undefined || text === "") {setFilteredData(undefined); return;}
+      const fetchSearchQuery = async () => {
+          console.log(debouncedText);
+          if(!debouncedText) return;
           try {
-              const data = await searchQuery(0, text);
-              if(data) return data.content;
+              const data = await searchQuery(page,10,debouncedText);
+              if(data) {
+                  setRowData(data.content);
+                  setTotalPages(data.totalPages);
+                  setTotalRecords(data.setTotalRecords);
+                  }
               }
           catch(error) {
               console.error(error);
@@ -67,14 +74,16 @@ export default function InteractiveTable({ title, subtitle, query, searchQuery, 
           }
 
       const handleSearchChange = (e) => {
+          setPage(0);
           const text = e.target.value;
-          fetchSearchQuery(text);
+          setSearchText(text);
           }
 
     useEffect(() => {
-    if (!query) return;
-    fetchData();
-  }, [query, page]);
+    if (!query && !fetchSearchQuery) return;
+    debouncedText ? fetchSearchQuery() : fetchData();
+
+  }, [ debouncedText ,page]);
 
   return (
     <div className={classes.card}>
@@ -99,7 +108,7 @@ export default function InteractiveTable({ title, subtitle, query, searchQuery, 
       <div className={classes.grid}>
         <AgGridReact
           theme={gridTheme}
-          rowData={filteredData ? filteredData: rowData}
+          rowData={rowData}
           columnDefs={colDefs}
           defaultColDef={{ minWidth: 70, resizable: true }}
           suppressHorizontalScroll

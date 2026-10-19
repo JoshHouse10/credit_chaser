@@ -52,12 +52,13 @@ export const fetchInvoices = async (page, limit) => {
         }
     }
 
-  export const searchInvoicesQuery = async (page, searchText) => {
+  export const searchInvoicesQuery = async (page, limit,searchText) => {
     try {
-        const response = await client.get("/invoices", {
+        const response = await client.get("/invoices/search", {
         params : {
         page,
-        searchText
+        limit,
+        search:searchText
                  }
 
         })
@@ -68,5 +69,18 @@ export const fetchInvoices = async (page, limit) => {
         console.error(error);
         throw error;
         }
+
+  }
+
+  export const fetchCustomers = async () => {
+
+  try {
+  const response = await client.get("/customers");
+  return response.data;
+  }
+  catch(error) {
+  console.error(error);
+  throw error;
+  }
 
   }

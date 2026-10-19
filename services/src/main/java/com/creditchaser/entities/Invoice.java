@@ -12,9 +12,9 @@ public class Invoice extends  BaseEntity {
     private Long documentNumber;
     private LocalDate documentDate;
     private LocalDate dueDate;
-    private BigDecimal invoiceTotal;
-    private BigDecimal paidTotal;
-    private BigDecimal outstandingTotal;
+    private BigDecimal invoiceTotal = BigDecimal.ZERO;
+    private BigDecimal paidTotal = BigDecimal.ZERO;
+    private BigDecimal outstandingTotal = BigDecimal.ZERO;
     @Enumerated(EnumType.STRING)
     private Currency currency;
     @ManyToOne(fetch = FetchType.LAZY)

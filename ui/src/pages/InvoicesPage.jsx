@@ -3,6 +3,7 @@ import { IconPlus } from '@tabler/icons-react';
 import Header from '../components/Header.jsx'
 import Navbar from '../components/Navbar.jsx';
 import InteractiveTable from '../components/InteractiveTable.jsx';
+import CreateInvoiceModal from '../components/CreateInvoiceModal.jsx';
 import { useDisclosure } from '@mantine/hooks';
 import classes from './css/InvoicesPage.module.css'
 import { fetchInvoices, searchInvoicesQuery } from '../api/queries.js';
@@ -35,15 +36,16 @@ function StatusCell({ data }) {
 }
 
 export default function InvoicesPage() {
-  const [opened] = useDisclosure();
+  const [opened, { open, close }] = useDisclosure(false);
 
   return (
     <div className={classes.invoicesPageContainer}>
       <div className={classes.createInvoiceContainer}>
-        <Button color="jade" leftSection={<IconPlus size={16} stroke={2} />}>
+        <Button color="jade" leftSection={<IconPlus size={16} stroke={2} />} onClick={open}>
           Create invoice
         </Button>
       </div>
+      <CreateInvoiceModal opened={opened} onClose={close} />
       <InteractiveTable
         title="All invoices"
         query={fetchInvoices}

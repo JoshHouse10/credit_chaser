@@ -34,7 +34,7 @@ export default function HomePageStatisticCardContainer() {
       ? statisticData?.yearlyTotalOverdue ?? 0
       : statisticData?.monthlyTotalOverdue ?? 0;
 
-  const total = totalPaid + totalOutstanding + totalOverdue;
+  const total = totalPaid + totalOutstanding;
   const pct = (v) => (total > 0 ? (v / total) * 100 : 0);
 
   const cards = [

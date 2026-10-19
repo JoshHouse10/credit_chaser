@@ -3,10 +3,7 @@ package com.creditchaser.controller;
 import com.creditchaser.functions.InvoiceFunction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +25,14 @@ public class InvoiceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(String.format("Something went wrong! \n %s", e.getMessage()));
         }
     }
+    @GetMapping("/search")
+    private ResponseEntity<Object> findAllInvoicesBySearch(@RequestParam int page, @RequestParam int limit, @RequestParam String search) {
+        try {
+            return ResponseEntity.ok().body(invoiceFunction.findAllInvoicesBySearch(page, limit, search));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(String.format("Something went wrong! \n %s", e.getMessage()));
+        }
+    }
 
     @GetMapping("next_7_days")
     private ResponseEntity<Object> findAllInvoicesDueNext7Days() {
@@ -37,4 +42,9 @@ public class InvoiceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(String.format("Something went wrong! \n %s", e.getMessage()));
         }
     }
+
+    //@PostMapping
+    //private ResponseEntity<Object> createInvoice() {
+
+    //}
 }

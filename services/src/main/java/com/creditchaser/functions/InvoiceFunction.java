@@ -2,8 +2,16 @@ package com.creditchaser.functions;
 
 import com.creditchaser.dto.InvoiceDto;
 import com.creditchaser.dto.StatisticCardResponseDto;
+import com.creditchaser.entities.Customer;
 import com.creditchaser.entities.Invoice;
+import com.creditchaser.entities.User;
+import com.creditchaser.entities.UserDocumentNumber;
+import com.creditchaser.repository.CustomerRepository;
 import com.creditchaser.repository.InvoiceRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import org.hibernate.query.SortDirection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,13 +30,18 @@ import java.util.stream.Collectors;
 
 public class InvoiceFunction {
 
+    private static final Logger log = LoggerFactory.getLogger(InvoiceFunction.class);
     private final InvoiceRepository invoiceRepository;
+    private final CustomerRepository customerRepository;
+    private final UserDocumentNumberFunction userDocumentNumberFunction;
 
-    InvoiceFunction(InvoiceRepository invoiceRepository) {
+    InvoiceFunction(InvoiceRepository invoiceRepository, CustomerRepository customerRepository, UserDocumentNumberFunction userDocumentNumberFunction) {
         this.invoiceRepository = invoiceRepository;
+        this.customerRepository = customerRepository;
+        this.userDocumentNumberFunction = userDocumentNumberFunction;
     }
     private boolean isOverdue(LocalDate paymentDate) {
-        return !LocalDate.now().isAfter(paymentDate);
+        return LocalDate.now().isAfter(paymentDate);
     }
     private boolean isInCurrentMonth(LocalDate documentDate) {
         final LocalDate monthStart = LocalDate.now().withDayOfMonth(1);
@@ -80,7 +93,7 @@ public class InvoiceFunction {
 
         final List<Invoice> invoices = invoiceRepository.findAll()
                 .stream()
-                .filter(invoice -> !invoice.getDocumentDate().isAfter(LocalDate.now().plusYears(1)))
+                .filter(invoice -> !invoice.getDocumentDate().isBefore(LocalDate.now().minusYears(1)))
                 .collect(Collectors.toList());
 
         BigDecimal yearlyTotalPaid = sumBy(invoices, Invoice::getPaidTotal);
@@ -112,6 +125,36 @@ public class InvoiceFunction {
                 .map(extractor)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    @Transactional
+    public Page<InvoiceDto> findAllInvoicesBySearch(int page, int limit, String search) {
+        Pageable pageable = PageRequest.of(page, limit, Sort.by("document_number").descending());
+        log.info("searching invoices with string : {}", search);
+        return invoiceRepository.findAllBySearch(search.toLowerCase(), pageable).map(InvoiceDto::new);
+    }
+
+    public InvoiceDto addInvoice(InvoiceDto invoice) {
+        if(!invoice.getDueDate().isAfter(LocalDate.now())) throw new IllegalStateException("Due date cannot be before current date");
+        if(!invoice.getDocumentDate().isBefore(invoice.getDueDate())) throw new IllegalStateException("Document date cannot be after due date");
+        Customer customer = customerRepository.findById(invoice.getCustomer().getId()).orElseThrow(()-> new RuntimeException("No customer found with supplied id"));
+
+        Invoice newInvoice = new Invoice();
+        newInvoice.setCustomer(customer);
+        newInvoice.setDocumentDate(invoice.getDocumentDate());
+        newInvoice.setDueDate(invoice.getDueDate());
+
+        newInvoice.setCurrency(invoice.getCurrency());
+        newInvoice.setDocumentNumber(userDocumentNumberFunction.getDocumentNumberByUser(new User("test", "yest","test@gmail.com", "pass123")));
+        newInvoice.setInvoiceTotal(invoice.getInvoiceTotal());
+        invoiceRepository.save(newInvoice);
+        userDocumentNumberFunction.incrementDocumentNumber(new UserDocumentNumber(new User("a", "a", "a", "A")));
+        return new InvoiceDto(newInvoice);
+
+
+
+
+
+
     }
 
 
